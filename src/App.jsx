@@ -1,25 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { 
-  Trophy, 
-  RotateCcw, 
-  Undo2, 
-  HelpCircle, 
-  Volume2, 
-  VolumeX, 
-  Bot, 
-  User, 
-  Grid, 
-  Lock, 
-  X, 
-  BookOpen, 
-  Sparkles,
-  Zap,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
-  Compass,
-  Move
-} from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { CELL_SIZE, GRID_SIZE } from './utils/constants.js'; // Adjust path as needed
+import { BookOpen, X } from 'lucide-react';
 
 import Rules from './components/Rules.jsx';
 
@@ -29,14 +10,14 @@ import { SoundEngine } from './utils/soundEngine.js';
 import Main from './components/Main.jsx';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
+import Winning from './components/Winning.jsx';
 
 
 const audioEngine = new SoundEngine();
 
 
 export default function App() {
-  const GRID_SIZE = 30; // 30x30 squares = 31x31 vertices = 961 nodes
-  const CELL_SIZE = 36; // Base size of each cell in viewport pixels at scale 1.0
+
 
   const [gameMode, setGameMode] = useState('pvp'); // 'pvp' or 'ai'
   const [aiDifficulty, setAiDifficulty] = useState('smart'); // 'easy', 'medium', 'smart'
@@ -90,7 +71,7 @@ export default function App() {
         y: Math.max(10, (rect.height - boardTotalPx) / 2)
       });
     }
-  }, [GRID_SIZE, CELL_SIZE]);
+  }, []);
 
   useEffect(() => {
     initBoard();
@@ -359,25 +340,42 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between items-center p-2 sm:p-4 font-sans select-none overflow-hidden relative">
-      
-      {/* Header Bar */}
-      
-       <Header/>
+
+      {/* Header moduleBar */}
+    
+      <Header setGameMode={setGameMode} gameMode={gameMode} initBoard={initBoard} soundMuted={soundMuted} toggleSound={toggleSound} currentPlayer={currentPlayer} scores={scores} extraTurn={extraTurn} aiDifficulty={aiDifficulty} setShowRules={setShowRules} />
+
+
       {/* Main Interactive Zoomable Canvas Board Viewport */}
-       <Main handleMouseDown={handleMouseDown} handleMouseMove={handleMouseMove}  />
+      <Main
+        boardContainerRef={boardContainerRef}
+        handleWheel={handleWheel}
+        handleMouseDown={handleMouseDown}
+        handleMouseMove={handleMouseMove}
+        handleMouseUp={handleMouseUp}
+        boardPxSize={boardPxSize}
+        zoomLevel={zoomLevel}
+        panOffset={panOffset}
+        squares={squares}
+        vertices={vertices}
+        processMove={processMove}
+        adjustZoom={adjustZoom}
+        resetView={resetView}
+        gameMode={gameMode}
+        currentPlayer={currentPlayer}
+      />
 
       {/* Footer Controls */}
-      <Footer />
+      <Footer handleUndo={handleUndo} history={history} gameMode={gameMode} currentPlayer={currentPlayer} initBoard={initBoard} />
 
-     
       {/* Game Over Modal */}
       {gameOver && winnerInfo && (
-       <Winning />
+        <Winning confettiCanvasRef={confettiCanvasRef} winnerInfo={winnerInfo} gameMode={gameMode} initBoard={initBoard} />
       )}
 
       {/* Rules Modal */}
       {showRules && (
-               <Rules setShowRules={setShowRules} X={X} BookOpen={BookOpen}/>
+        <Rules setShowRules={setShowRules} X={X} BookOpen={BookOpen} />
       )}
 
     </div>

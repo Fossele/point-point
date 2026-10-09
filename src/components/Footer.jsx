@@ -1,4 +1,8 @@
-export default function Footer() {
+import { Undo2, RotateCcw } from 'lucide-react';
+
+
+
+export default function Footer({ handleUndo, history, gameMode, currentPlayer, initBoard}) {
     return (
         <footer className="w-full max-w-5xl flex justify-between items-center gap-3 z-20">
             <button
