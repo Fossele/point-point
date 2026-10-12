@@ -42,7 +42,7 @@ export function useAIPlayer({
 
                 if (emptyNodes.length === 0) return;
 
-                let selectedMove = null;
+                let selectedMove = null; // Declared once here
 
                 if (aiDifficulty === 'easy' || candidateMap.size === 0) {
                     selectedMove = emptyNodes[Math.floor(Math.random() * emptyNodes.length)];
@@ -52,14 +52,15 @@ export function useAIPlayer({
                         return { r, c };
                     });
 
-                    let boxCompletingMove = null;
-                    let safeMove = null;
+                    let boxCompletingMoves = [];
+                    let safeMoves = [];
+                    let riskyMoves = [];
 
-                    for (const move of candidatesList) {
+                    candidatesList.forEach(move => {
                         const testVerts = vertices.map(row => [...row]);
-                        testVerts[move.r][move.c] = 2;
+                        testVerts[move.r][move.c] = 2; // AI is player 2
 
-                        const { claimedCount, blockedCount } = evaluateAdjacentSquares(
+                        const { claimedCount } = evaluateAdjacentSquares(
                             move.r,
                             move.c,
                             testVerts,
@@ -67,21 +68,48 @@ export function useAIPlayer({
                             2
                         );
 
+                        // Check if this move sets up a 3-corner trap for the opponent
+                        let createsDangerSquare = false;
+                        const adjacentSquaresToCheck = [
+                            { r: move.r - 1, c: move.c - 1 },
+                            { r: move.r - 1, c: move.c },
+                            { r: move.r, c: move.c - 1 },
+                            { r: move.r, c: move.c }
+                        ];
+
+                        adjacentSquaresToCheck.forEach(({ r: sr, c: sc }) => {
+                            if (sr >= 0 && sr < GRID_SIZE && sc >= 0 && sc < GRID_SIZE) {
+                                if (squares[sr][sc] === 0) {
+                                    // Count how many vertices are filled in this square
+                                    const c1 = testVerts[sr][sc];
+                                    const c2 = testVerts[sr][sc + 1];
+                                    const c3 = testVerts[sr + 1][sc];
+                                    const c4 = testVerts[sr + 1][sc + 1];
+                                    const filledCount = [c1, c2, c3, c4].filter(v => v !== 0).length;
+
+                                    if (filledCount === 3) {
+                                        createsDangerSquare = true; // This move gives the opponent a box!
+                                    }
+                                }
+                            }
+                        });
+
+                        // Categorize the move
                         if (claimedCount > 0) {
-                            boxCompletingMove = move;
-                            break;
+                            boxCompletingMoves.push(move);
+                        } else if (!createsDangerSquare) {
+                            safeMoves.push(move);
+                        } else {
+                            riskyMoves.push(move);
                         }
+                    });
 
-                        if (aiDifficulty === 'smart' && blockedCount === 0) {
-                            safeMove = move;
-                        }
-                    }
-
-                    if (boxCompletingMove) {
-                        selectedMove = boxCompletingMove;
-                    } else if (aiDifficulty === 'smart' && safeMove) {
-                        selectedMove = safeMove;
-                    } else {
+                    // Selection Hierarchy (assigned to the existing variable, no 'let')
+                    if (boxCompletingMoves.length > 0) {
+                        selectedMove = boxCompletingMoves[Math.floor(Math.random() * boxCompletingMoves.length)];
+                    } else if (safeMoves.length > 0 && aiDifficulty === 'smart') {
+                        selectedMove = safeMoves[Math.floor(Math.random() * safeMoves.length)];
+                    } else if (candidatesList.length > 0) {
                         selectedMove = candidatesList[Math.floor(Math.random() * candidatesList.length)];
                     }
                 }

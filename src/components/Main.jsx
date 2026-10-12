@@ -6,12 +6,14 @@ import {
     X
 } from 'lucide-react';
 
-import {CELL_SIZE, GRID_SIZE} from '../utils/constants.js'; 
+import { CELL_SIZE, GRID_SIZE } from '../utils/constants.js';
 
 import React from "react";
 
 
-export default function Main({ boardContainerRef, handleWheel, handleMouseDown, handleMouseMove, handleMouseUp, boardPxSize, zoomLevel, panOffset, squares, vertices, processMove, adjustZoom, resetView, gameMode, currentPlayer }) {
+export default function Main({ boardContainerRef, handleWheel, handleMouseDown, handleMouseMove, handleMouseUp, boardPxSize, zoomLevel, panOffset, squares, vertices, processMove, adjustZoom, resetView, gameMode, currentPlayer, scores, captureOrderMap }) {
+   
+
     return (
         <main
             ref={boardContainerRef}
@@ -102,26 +104,47 @@ export default function Main({ boardContainerRef, handleWheel, handleMouseDown, 
                     {/* Cell Fill Colors */}
                     {squares.map((rowArr, r) =>
                         rowArr.map((sqState, c) => {
+
+                            
                             if (sqState === 0) return null;
+
+                            const boxKey = `${r}-${c}`;
+                            const boxData = captureOrderMap[boxKey];
                             return (
-                                <rect
-                                    key={`rect-${r}-${c}`}
-                                    x={c * CELL_SIZE}
-                                    y={r * CELL_SIZE}
-                                    width={CELL_SIZE}
-                                    height={CELL_SIZE}
-                                    fill={
-                                        sqState === 1 ? 'rgba(6, 182, 212, 0.25)' :
-                                            sqState === 2 ? 'rgba(236, 72, 153, 0.25)' :
-                                                '#1e293b'
-                                    }
-                                    stroke={
-                                        sqState === 1 ? 'rgba(6, 182, 212, 0.6)' :
-                                            sqState === 2 ? 'rgba(236, 72, 153, 0.6)' :
-                                                '#334155'
-                                    }
-                                    strokeWidth="1"
-                                />
+                                <g key={`box-${r}-${c}`}>
+                                    <rect
+                                        x={c * CELL_SIZE}
+                                        y={r * CELL_SIZE}
+                                        width={CELL_SIZE}
+                                        height={CELL_SIZE}
+                                        fill={
+                                            sqState === 1 ? 'rgba(6, 182, 212, 0.25)' :
+                                                sqState === 2 ? 'rgba(236, 72, 153, 0.25)' :
+                                                    '#1e293b'
+                                        }
+                                        stroke={
+                                            sqState === 1 ? 'rgba(6, 182, 212, 0.6)' :
+                                                sqState === 2 ? 'rgba(236, 72, 153, 0.6)' :
+                                                    '#334155'
+                                        }
+                                        strokeWidth="1"
+                                    />
+
+                                    {/* Display player indicator inside the claimed box */}
+                                    {(sqState === 1 || sqState === 2) && (
+                                        <text
+                                            x={c * CELL_SIZE + CELL_SIZE / 2}
+                                            y={r * CELL_SIZE + CELL_SIZE / 2}
+                                            dominantBaseline="middle"
+                                            textAnchor="middle"
+                                            fill={boxData.player === 1 ? '#06b6d4' : '#ec4899'}
+                                            fontSize="12"
+                                            fontWeight="bold"
+                                        >
+                                            {boxData.score + 1}
+                                        </text>
+                                    )}
+                                </g>
                             );
                         })
                     )}
@@ -160,10 +183,10 @@ export default function Main({ boardContainerRef, handleWheel, handleMouseDown, 
                             onClick={() => processMove(vr, vc)}
                             disabled={owner !== 0 || (gameMode === 'ai' && currentPlayer === 2)}
                             className={`absolute rounded-full transform -translate-x-1/2 -translate-y-1/2 transition-all duration-150 focus:outline-none ${owner === 0
-                                    ? 'bg-slate-800 border border-slate-600 hover:scale-150 hover:bg-white hover:border-white hover:shadow-[0_0_12px_#ffffff] cursor-pointer'
-                                    : owner === 1
-                                        ? 'bg-cyan-400 border-2 border-white shadow-[0_0_12px_#00f0ff] scale-110 z-10'
-                                        : 'bg-pink-500 border-2 border-white shadow-[0_0_12px_#ff007f] scale-110 z-10'
+                                ? 'bg-slate-800 border border-slate-600 hover:scale-150 hover:bg-white hover:border-white hover:shadow-[0_0_12px_#ffffff] cursor-pointer'
+                                : owner === 1
+                                    ? 'bg-cyan-400 border-2 border-white shadow-[0_0_12px_#00f0ff] scale-110 z-10'
+                                    : 'bg-pink-500 border-2 border-white shadow-[0_0_12px_#ff007f] scale-110 z-10'
                                 }`}
                             style={{
                                 left: `${vc * CELL_SIZE}px`,

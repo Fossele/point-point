@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { GRID_SIZE } from '../utils/constants.js';
 import { checkGameOver } from '../utils/gameOver.js';
+import { useCaptureOrder } from './useCaptureOrder.js';
 
 export function useGameState(audioEngine, onGameOver) {
     const [gameMode, setGameMode] = useState('pvp'); // 'pvp' or 'ai'
@@ -15,6 +16,9 @@ export function useGameState(audioEngine, onGameOver) {
     const [squares, setSquares] = useState([]);
     const [claimedCountTotal, setClaimedCountTotal] = useState(0);
     const [history, setHistory] = useState([]);
+
+
+    const { captureOrderMap, handleBoxCaptured } = useCaptureOrder(scores, setScores);
 
     const initBoard = useCallback(() => {
         const newVerts = Array.from({ length: GRID_SIZE + 1 }, () => Array(GRID_SIZE + 1).fill(0));
@@ -54,6 +58,7 @@ export function useGameState(audioEngine, onGameOver) {
                         if (c1 === c2 && c2 === c3 && c3 === c4) {
                             updatedSquares[r][c] = player;
                             claimedCount++;
+                            handleBoxCaptured(r, c, player);
                         } else {
                             updatedSquares[r][c] = -1;
                             blockedCount++;
@@ -80,6 +85,8 @@ export function useGameState(audioEngine, onGameOver) {
                 claimedCountTotal
             }
         ]);
+
+        console.log(history);
 
         const nextVerts = vertices.map(row => [...row]);
         nextVerts[r][c] = currentPlayer;
@@ -165,6 +172,7 @@ export function useGameState(audioEngine, onGameOver) {
         initBoard,
         processMove,
         handleUndo,
-        evaluateAdjacentSquares
+        evaluateAdjacentSquares,
+        captureOrderMap
     };
 }
