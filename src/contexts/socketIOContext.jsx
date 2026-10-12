@@ -1,7 +1,7 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { io } from 'socket.io-client'
-import { useAuth } from './AuthContext.js'
+import { useAuth } from './authContext.jsx'
 
 
 
@@ -11,8 +11,7 @@ export const SocketIOContext = createContext({
     error: null,
 })
 
-export const SocketIOContextProvider = ({
-    children }) => {
+export const SocketIOContextProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const [status, setStatus] = useState('waiting');
     const [error, setError] = useState(null);

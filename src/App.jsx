@@ -12,8 +12,8 @@ import { useSoundEngine } from './hooks/useSoundEngine.js';
 import { useGameState } from './hooks/useGameState.js';
 import { useAIPlayer } from './hooks/useAIPlayer.js';
 import { launchConfetti } from './utils/launchConfettis';
-import { SocketIOContextProvider } from './context/socketIOContext.js';
-import { AuthContextProvider } from './context/authContext.js';
+import { SocketIOContextProvider } from './contexts/socketIOContext.jsx';
+import { AuthContextProvider } from './contexts/authContext.jsx';
 
 function Game() {
   const [showRules, setShowRules] = useState(false);

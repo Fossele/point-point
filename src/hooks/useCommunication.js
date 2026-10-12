@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSocket } from "../context/socketIOContext";
+import { useSocket } from "../contexts/socketIOContext.jsx";
 
 export function useCommunication() {
     const { socket } = useSocket();
