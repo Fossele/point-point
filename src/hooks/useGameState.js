@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { GRID_SIZE } from '../utils/constants.js';
 import { checkGameOver } from '../utils/gameOver.js';
 import { useCaptureOrder } from './useCaptureOrder.js';
+import { useCommunication } from './useCommunication.js';
 
 export function useGameState(audioEngine, onGameOver) {
     const [gameMode, setGameMode] = useState('pvp'); // 'pvp' or 'ai'
@@ -19,6 +20,7 @@ export function useGameState(audioEngine, onGameOver) {
 
 
     const { captureOrderMap, handleBoxCaptured } = useCaptureOrder(scores, setScores);
+    const {messages , sendMessages} = useCommunication();
 
     const initBoard = useCallback(() => {
         const newVerts = Array.from({ length: GRID_SIZE + 1 }, () => Array(GRID_SIZE + 1).fill(0));
@@ -85,8 +87,14 @@ export function useGameState(audioEngine, onGameOver) {
                 claimedCountTotal
             }
         ]);
-
-        console.log(history);
+        sendMessages( {
+                vertices: vertices.map(row => [...row]),
+                squares: squares.map(row => [...row]),
+                currentPlayer,
+                scores: { ...scores },
+                extraTurn,
+                claimedCountTotal
+            });
 
         const nextVerts = vertices.map(row => [...row]);
         nextVerts[r][c] = currentPlayer;

@@ -52,6 +52,5 @@ SocketIOContextProvider.propTypes = {
 }
 
 export function useSocket() {
-    const {socket, status, error} =  useContext(SocketIOContext);
-    return [socket, status, error];
+    return  useContext(SocketIOContext);
 }
