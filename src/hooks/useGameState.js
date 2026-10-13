@@ -20,7 +20,7 @@ export function useGameState(audioEngine, onGameOver) {
 
 
     const { captureOrderMap, handleBoxCaptured } = useCaptureOrder(scores, setScores);
-    const {messages , sendMessages} = useCommunication();
+    const {messages , sendMessage} = useCommunication();
 
     const initBoard = useCallback(() => {
         const newVerts = Array.from({ length: GRID_SIZE + 1 }, () => Array(GRID_SIZE + 1).fill(0));
@@ -87,7 +87,7 @@ export function useGameState(audioEngine, onGameOver) {
                 claimedCountTotal
             }
         ]);
-        sendMessages( {
+        sendMessage( {
                 vertices: vertices.map(row => [...row]),
                 squares: squares.map(row => [...row]),
                 currentPlayer,

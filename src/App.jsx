@@ -1,4 +1,8 @@
 import { useState, useRef } from 'react';
+
+
+import { Route, Routes } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BookOpen, X } from 'lucide-react';
 
 import Rules from './components/Rules.jsx';
@@ -14,6 +18,8 @@ import { useAIPlayer } from './hooks/useAIPlayer.js';
 import { launchConfetti } from './utils/launchConfettis';
 import { SocketIOContextProvider } from './contexts/socketIOContext.jsx';
 import { AuthContextProvider } from './contexts/authContext.jsx';
+import Signup from './pages/SignUp.jsx';
+import Login from './pages/Login.jsx';
 
 function Game() {
   const [showRules, setShowRules] = useState(false);
@@ -119,12 +125,16 @@ function Game() {
 
 export default function App() {
   return (
-    <AuthContextProvider>
-      <SocketIOContextProvider>
-      
-        <Game />
-
-      </SocketIOContextProvider>
-    </AuthContextProvider>
+    <QueryClientProvider client={new QueryClient()}>
+      <AuthContextProvider>
+        <SocketIOContextProvider>
+          <Routes>
+            <Route path="/" element={<Game />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Routes>
+        </SocketIOContextProvider>
+      </AuthContextProvider>
+    </QueryClientProvider>
   )
 }

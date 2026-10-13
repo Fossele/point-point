@@ -19,14 +19,13 @@ export const SocketIOContextProvider = ({ children }) => {
 
     useEffect(() => {
         if (token) {
-            const socket =
-                io(import.meta.env.VITE_SOCKET_HOST, {
-                    query:
-                        window.location.search.substring(1),
+            const socket = io("http://localhost:4000", {
+                    query:window.location.search.substring(1),
                     auth: { token },
                 })
             socket.on('connect', () => {
                 setStatus('connected')
+                console.log('Connected to server via Socket.IO');
                 setError(null)
             })
             socket.on('connect_error', (err) => {

@@ -6,7 +6,7 @@ import { signup } from '../api/users.js';
 
 
 
-export function Signup() {
+export default function Signup() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
@@ -25,6 +25,7 @@ export function Signup() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        console.log(username, email, password)
         signupMutation.mutate()
     }
 
@@ -58,7 +59,7 @@ export function Signup() {
                     type='email'
                     name='create-email'
                     id='create-email'
-                    value={password}
+                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
             </div>

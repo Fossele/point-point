@@ -1,23 +1,25 @@
 import { login } from '../api/users.js'
-import { useAuth } from '../context/AuthContext.js'
+import { useAuth } from '../contexts/authContext.jsx'
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 
 
-function login() {
+export default function Login() {
 
-    const [, setToken] = useAuth();
+    const [token, setToken] = useAuth();
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    const navigate = useNavigate();
 
     const loginMutation = useMutation({
         mutationFn: () => login({
             email,
             password
         }),
-        onSuccess: (data) => {
-            setToken(data.token)
+        onSuccess: (res) => {
+            setToken(res.data.token)
+            console.log(token)
             navigate('/')
         },
         onError: () => alert('failed to login!'),
@@ -35,7 +37,7 @@ function login() {
                     type='email'
                     name='create-email'
                     id='create-email'
-                    value={password}
+                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
             </div>
