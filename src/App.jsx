@@ -1,140 +1,43 @@
-import { useState, useRef } from 'react';
 
 
 import { Route, Routes } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { BookOpen, X } from 'lucide-react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import Rules from './components/Rules.jsx';
-import Main from './components/Main.jsx';
-import Header from './components/Header.jsx';
-import Footer from './components/Footer.jsx';
-import Winning from './components/Winning.jsx';
 
-import { usePanZoom } from './hooks/usePanZoom.js';
-import { useSoundEngine } from './hooks/useSoundEngine.js';
-import { useGameState } from './hooks/useGameState.js';
-import { useAIPlayer } from './hooks/useAIPlayer.js';
-import { launchConfetti } from './utils/launchConfettis';
 import { SocketIOContextProvider } from './contexts/socketIOContext.jsx';
 import { AuthContextProvider } from './contexts/authContext.jsx';
+import { GameStateContextProvider } from './contexts/GameStateContextProvider.jsx';
+
 import Signup from './pages/SignUp.jsx';
 import Login from './pages/Login.jsx';
-
-function Game() {
-  const [showRules, setShowRules] = useState(false);
-  const confettiCanvasRef = useRef(null);
-
+import HomePage from './pages/HomePage.jsx';
+import GameRoomPage from './pages/GameRoomPage.jsx';
+import Game from './components/Game.jsx';
 
 
-  const { audioEngine, soundMuted, toggleSound } = useSoundEngine();
 
-  const {
-    boardContainerRef,
-    zoomLevel,
-    panOffset,
-    boardPxSize,
-    resetView,
-    adjustZoom,
-    handleWheel,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp
-  } = usePanZoom();
-
-  const {
-    gameMode, setGameMode,
-    aiDifficulty, setAiDifficulty,
-    currentPlayer,
-    scores,
-    extraTurn,
-    gameOver,
-    winnerInfo,
-    vertices,
-    squares,
-    history,
-    initBoard,
-    processMove,
-    handleUndo,
-    evaluateAdjacentSquares,
-    captureOrderMap
-  } = useGameState(audioEngine, () => {
-    setTimeout(() => launchConfetti(confettiCanvasRef.current), 100);
-  });
-
-  useAIPlayer({
-    gameMode,
-    currentPlayer,
-    gameOver,
-    aiDifficulty,
-    vertices,
-    squares,
-    processMove,
-    evaluateAdjacentSquares
-  });
-
-  return (
-
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between items-center p-2 sm:p-4 font-sans select-none overflow-hidden relative">
-      <Header
-        setGameMode={setGameMode}
-        gameMode={gameMode}
-        initBoard={initBoard}
-        soundMuted={soundMuted}
-        toggleSound={toggleSound}
-        currentPlayer={currentPlayer}
-        scores={scores}
-        extraTurn={extraTurn}
-        aiDifficulty={aiDifficulty}
-        setShowRules={setShowRules}
-      />
-
-      <Main
-        boardContainerRef={boardContainerRef}
-        handleWheel={handleWheel}
-        handleMouseDown={handleMouseDown}
-        handleMouseMove={handleMouseMove}
-        handleMouseUp={handleMouseUp}
-        boardPxSize={boardPxSize}
-        zoomLevel={zoomLevel}
-        panOffset={panOffset}
-        squares={squares}
-        vertices={vertices}
-        processMove={processMove}
-        adjustZoom={adjustZoom}
-        resetView={resetView}
-        gameMode={gameMode}
-        currentPlayer={currentPlayer}
-        scores={scores}
-        captureOrderMap={captureOrderMap}
-      />
-
-      <Footer handleUndo={handleUndo} history={history} gameMode={gameMode} currentPlayer={currentPlayer} initBoard={initBoard} />
-
-      {gameOver && winnerInfo && (
-        <Winning confettiCanvasRef={confettiCanvasRef} winnerInfo={winnerInfo} gameMode={gameMode} initBoard={initBoard} />
-      )}
-
-      {showRules && (
-        <Rules setShowRules={setShowRules} X={X} BookOpen={BookOpen} />
-      )}
-    </div>
-
-  );
-}
 
 export default function App() {
   return (
     <QueryClientProvider client={new QueryClient()}>
+
       <AuthContextProvider>
         <SocketIOContextProvider>
-          <Routes>
-            <Route path="/" element={<Game />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-          </Routes>
+          <GameStateContextProvider>
+            <Routes>
+
+              {/* Home screen: Create room or join via input */}
+              <Route path="/" element={<HomePage />} />
+              {/* Room screen: Handles direct links like /room/XYZ-123 */}
+              <Route path="/room/:roomCode" element={<GameRoomPage />} />
+              <Route path="/game" element={<Game />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+            </Routes>
+          </GameStateContextProvider>
         </SocketIOContextProvider>
       </AuthContextProvider>
+
     </QueryClientProvider>
   )
 }
