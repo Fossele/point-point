@@ -123,3 +123,5 @@ export function useAIPlayer({
         }
     }, [currentPlayer, gameMode, gameOver, vertices, squares, aiDifficulty, processMove, evaluateAdjacentSquares]);
 }
+
+//handles the AI player's turn in the game, making decisions based on the current game state and difficulty level.

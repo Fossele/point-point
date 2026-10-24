@@ -1,4 +1,4 @@
-import { useContext, createContext, useState, useEffect } from "react";
+import { useContext, createContext, useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { io } from 'socket.io-client'
 import { useAuth } from './authContext.jsx'
@@ -12,17 +12,22 @@ export const SocketIOContext = createContext({
 })
 
 export const SocketIOContextProvider = ({ children }) => {
-    const [socket, setSocket] = useState(null);
+
     const [status, setStatus] = useState('waiting');
     const [error, setError] = useState(null);
     const [token] = useAuth();
 
+    const socketRef = useRef(null);
+
     useEffect(() => {
         if (token) {
             const socket = io("http://localhost:4000", {
-                    query:window.location.search.substring(1),
-                    auth: { token },
-                })
+                query: window.location.search.substring(1),
+                auth: { token },
+            })
+
+            socketRef.current = socket;
+
             socket.on('connect', () => {
                 setStatus('connected')
                 console.log('Connected to server via Socket.IO');
@@ -32,14 +37,22 @@ export const SocketIOContextProvider = ({ children }) => {
                 setStatus('error')
                 setError(err)
             })
-            socket.on('disconnect', () =>
-                setStatus('disconnected'))
-            setSocket(socket)
+            socket.on('disconnect', () => {
+                setStatus('disconnected');
+                socketRef.current = null;
+            });
+
+
+            return () => {
+                socket.disconnect();
+                socketRef.current = null;
+            };
+
         }
-    }, [token, setSocket, setStatus, setError]);
+    }, [token, setStatus, setError]);
 
     return (
-        <SocketIOContext.Provider value={{ socket, status, error }}>
+        <SocketIOContext.Provider value={{ socket: socketRef.current, status, error }}>
             {children}
         </SocketIOContext.Provider>
     )
@@ -50,5 +63,5 @@ SocketIOContextProvider.propTypes = {
 }
 
 export function useSocket() {
-    return  useContext(SocketIOContext);
+    return useContext(SocketIOContext);
 }

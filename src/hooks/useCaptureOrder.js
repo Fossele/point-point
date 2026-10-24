@@ -1,7 +1,9 @@
 import { useState } from 'react';
 
-export const useCaptureOrder = (scores, setScores) => {
-    // Track the global counter and the dictionary map in your state
+export const useCaptureOrder = () => {
+    // Track the global counter and the dictionary map in your state 
+    const [scores, setScores] = useState({ 1: 0, 2: 0 });
+
     const [captureOrderMap, setCaptureOrderMap] = useState({});
 
 
@@ -21,6 +23,7 @@ export const useCaptureOrder = (scores, setScores) => {
     
     };
 
-    return { captureOrderMap, handleBoxCaptured };
+    return { scores, setScores, captureOrderMap, handleBoxCaptured };
 }
 
+//handles the order in which boxes are captured by players, maintaining a score for each player and a mapping of captured boxes to their respective players and scores.

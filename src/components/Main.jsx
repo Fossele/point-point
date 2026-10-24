@@ -9,10 +9,12 @@ import {
 import { CELL_SIZE, GRID_SIZE } from '../utils/constants.js';
 
 import React from "react";
+import { useState } from 'react';
 
 
 export default function Main({ boardContainerRef, handleWheel, handleMouseDown, handleMouseMove, handleMouseUp, boardPxSize, zoomLevel, panOffset, squares, vertices, processMove, adjustZoom, resetView, gameMode, currentPlayer, scores, captureOrderMap }) {
-   
+
+  
 
     return (
         <main

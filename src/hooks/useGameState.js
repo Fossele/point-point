@@ -3,12 +3,13 @@ import { GRID_SIZE } from '../utils/constants.js';
 import { checkGameOver } from '../utils/gameOver.js';
 import { useCaptureOrder } from './useCaptureOrder.js';
 import { useCommunication } from './useCommunication.js';
+//import { Columns } from 'lucide-react';
 
 export function useGameState(audioEngine, onGameOver) {
     const [gameMode, setGameMode] = useState('pvp'); // 'pvp' or 'ai'
     const [aiDifficulty, setAiDifficulty] = useState('smart'); // 'easy', 'medium', 'smart'
     const [currentPlayer, setCurrentPlayer] = useState(1);
-    const [scores, setScores] = useState({ 1: 0, 2: 0 });
+
     const [extraTurn, setExtraTurn] = useState(false);
     const [gameOver, setGameOver] = useState(false);
     const [winnerInfo, setWinnerInfo] = useState(null);
@@ -17,10 +18,11 @@ export function useGameState(audioEngine, onGameOver) {
     const [squares, setSquares] = useState([]);
     const [claimedCountTotal, setClaimedCountTotal] = useState(0);
     const [history, setHistory] = useState([]);
+    const [moveHistory, setMoveHistory] = useState([]);
 
 
-    const { captureOrderMap, handleBoxCaptured } = useCaptureOrder(scores, setScores);
-    const {messages , sendMessage} = useCommunication();
+    const { scores, setScores, captureOrderMap, handleBoxCaptured } = useCaptureOrder();
+    const { sendMove, gameState } = useCommunication();
 
     const initBoard = useCallback(() => {
         const newVerts = Array.from({ length: GRID_SIZE + 1 }, () => Array(GRID_SIZE + 1).fill(0));
@@ -37,6 +39,8 @@ export function useGameState(audioEngine, onGameOver) {
     }, []);
 
     const evaluateAdjacentSquares = (vr, vc, currentVerts, currentSquares, player) => {
+        // This function evaluates the squares adjacent to a given vertex and determines if any are claimed or blocked.
+
         let claimedCount = 0;
         let blockedCount = 0;
         const updatedSquares = currentSquares.map(row => [...row]);
@@ -74,7 +78,20 @@ export function useGameState(audioEngine, onGameOver) {
     };
 
     const processMove = useCallback((r, c) => {
+        console.log(gameState);
+
+      /*  if (gameState.currentTurn !==  currentPlayer) {
+            //block unauthorized moves
+            audioEngine.play('block', currentPlayer === 1);
+            console.log("Not your turn!");
+            return;
+        }*/
+
+        console.log(`Move ${r}-${c} played by ${currentPlayer}`);
+
         if (gameOver || vertices[r][c] !== 0) return;
+
+        let move = { row: r, column: c, player: currentPlayer, extraTurn: extraTurn }
 
         setHistory(prev => [
             ...prev,
@@ -87,14 +104,19 @@ export function useGameState(audioEngine, onGameOver) {
                 claimedCountTotal
             }
         ]);
-        sendMessage( {
-                vertices: vertices.map(row => [...row]),
-                squares: squares.map(row => [...row]),
-                currentPlayer,
-                scores: { ...scores },
-                extraTurn,
-                claimedCountTotal
-            });
+
+        setMoveHistory(prev => [...prev, move]);
+
+        /* sendMessage("", {
+             vertices: vertices.map(row => [...row]),
+             squares: squares.map(row => [...row]),
+             currentPlayer,
+             scores: { ...scores },
+             extraTurn,
+             claimedCountTotal
+         });*/
+
+        sendMove({r, c, player: currentPlayer });
 
         const nextVerts = vertices.map(row => [...row]);
         nextVerts[r][c] = currentPlayer;
@@ -147,8 +169,10 @@ export function useGameState(audioEngine, onGameOver) {
         } else {
             setExtraTurn(false);
             setCurrentPlayer(prev => (prev === 1 ? 2 : 1));
+
         }
     }, [vertices, squares, currentPlayer, scores, gameOver, extraTurn, claimedCountTotal, audioEngine, onGameOver]);
+
 
     const handleUndo = () => {
         if (history.length === 0) return;
@@ -184,3 +208,5 @@ export function useGameState(audioEngine, onGameOver) {
         captureOrderMap
     };
 }
+
+// This hook manages the game state, including the board, players, scores, and game logic. It also accesses communication with the backend through the useCommunication hook.

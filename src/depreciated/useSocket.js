@@ -1,12 +1,9 @@
-/*import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import PropTypes from 'prop-types';
 
 
-const useSocket = () => {
-
-
-    
+export const useSocket = () => {
 
     const socket = io(import.meta.env.VITE_SOCKET_HOST, {
         query: window.location.search.substring(1),
@@ -28,4 +25,4 @@ const useSocket = () => {
         console.error('socket.io connect error:',
             err)
     });
-}  */
+}  
