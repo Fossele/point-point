@@ -8,7 +8,7 @@ import { useCommunication } from './useCommunication.js';
 export function useGameState(audioEngine, onGameOver) {
     const [gameMode, setGameMode] = useState('pvp'); // 'pvp' or 'ai'
     const [aiDifficulty, setAiDifficulty] = useState('smart'); // 'easy', 'medium', 'smart'
-    const [currentPlayer, setCurrentPlayer] = useState(1);
+    const [currentPlayer, setCurrentPlayer] = useState(null);
 
     const [extraTurn, setExtraTurn] = useState(false);
     const [gameOver, setGameOver] = useState(false);
@@ -19,10 +19,12 @@ export function useGameState(audioEngine, onGameOver) {
     const [claimedCountTotal, setClaimedCountTotal] = useState(0);
     const [history, setHistory] = useState([]);
     const [moveHistory, setMoveHistory] = useState([]);
+    
+
 
 
     const { scores, setScores, captureOrderMap, handleBoxCaptured } = useCaptureOrder();
-    const { sendMove, gameState } = useCommunication();
+    const { sendMove, gameState, moves } = useCommunication();
 
     const initBoard = useCallback(() => {
         const newVerts = Array.from({ length: GRID_SIZE + 1 }, () => Array(GRID_SIZE + 1).fill(0));
@@ -30,7 +32,7 @@ export function useGameState(audioEngine, onGameOver) {
         setVertices(newVerts);
         setSquares(newSq);
         setScores({ 1: 0, 2: 0 });
-        setCurrentPlayer(1);
+        setCurrentPlayer(gameState.currentTurn);
         setExtraTurn(false);
         setGameOver(false);
         setWinnerInfo(null);
@@ -80,12 +82,17 @@ export function useGameState(audioEngine, onGameOver) {
     const processMove = useCallback((r, c) => {
         console.log(gameState);
 
-      /*  if (gameState.currentTurn !==  currentPlayer) {
+      if (gameState.currentTurn !==  gameState.role) {
             //block unauthorized moves
-            audioEngine.play('block', currentPlayer === 1);
+            //audioEngine.play('block', currentPlayer === 1);
             console.log("Not your turn!");
             return;
-        }*/
+        }
+
+        if (gameState.role == null){
+            console.log("seems like you have no role.");
+            return;
+        }
 
         console.log(`Move ${r}-${c} played by ${currentPlayer}`);
 
@@ -168,7 +175,7 @@ export function useGameState(audioEngine, onGameOver) {
             setExtraTurn(true);
         } else {
             setExtraTurn(false);
-            setCurrentPlayer(prev => (prev === 1 ? 2 : 1));
+            setCurrentPlayer(gameState.currentTurn);
 
         }
     }, [vertices, squares, currentPlayer, scores, gameOver, extraTurn, claimedCountTotal, audioEngine, onGameOver]);
@@ -205,7 +212,8 @@ export function useGameState(audioEngine, onGameOver) {
         processMove,
         handleUndo,
         evaluateAdjacentSquares,
-        captureOrderMap
+        captureOrderMap,
+        moves
     };
 }
 

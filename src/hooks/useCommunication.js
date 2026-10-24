@@ -22,10 +22,25 @@ export function useCommunication() {
 
 
     const receiveMove = useCallback(({ r, c, player, currentTurn, scores }) => {
-       // if (!socket) return;
+        // if (!socket) return;
 
         console.log("move received: ", { r, c, player, currentTurn, scores });
         setMoves((moves) => [...moves, { r, c, player, currentTurn, scores }]);
+        setGameState(prev => {
+
+            const nextState = {
+                ...prev,
+                status: 'playing',
+                players: prev.players,
+                currentTurn,
+                role: prev.role,
+                roomCode: prev.roomCode
+            }
+
+            console.log("Game state applied instantly, new state:", nextState, "state updated from the last move.");
+
+            return nextState;
+        });
     }, [socket]);
 
     const receiveGameState = useCallback(({ currentTurn, players, roomCode }) => {
@@ -41,7 +56,7 @@ export function useCommunication() {
                 players,
                 currentTurn,
                 role: myPlayer ? myPlayer.role : 'spectator',
-                roomCode : roomCode
+                roomCode: roomCode
             }
 
             console.log("Game state applied instantly, new state:", nextState, "game starts in a moment.");

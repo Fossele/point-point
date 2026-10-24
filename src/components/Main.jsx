@@ -10,11 +10,21 @@ import { CELL_SIZE, GRID_SIZE } from '../utils/constants.js';
 
 import React from "react";
 import { useState } from 'react';
+import { useCommunication } from '../hooks/useCommunication.js';
 
 
 export default function Main({ boardContainerRef, handleWheel, handleMouseDown, handleMouseMove, handleMouseUp, boardPxSize, zoomLevel, panOffset, squares, vertices, processMove, adjustZoom, resetView, gameMode, currentPlayer, scores, captureOrderMap }) {
 
-  
+
+    const { moves } = useCommunication();
+
+    moves.forEach(capturedPoint => {
+        let point = document.getElementById(`v-${capturedPoint.r}-${capturedPoint.c}`);
+        point.className = `absolute rounded-full transform -translate-x-1/2 -translate-y-1/2 transition-all duration-150 focus:outline-none ${capturedPoint.player == 1 ? 'bg-cyan-400 border-2 border-white shadow-[0_0_12px_#00f0ff] scale-110 z-10'
+                : 'bg-pink-500 border-2 border-white shadow-[0_0_12px_#ff007f] scale-110 z-10'
+            }`
+    });
+
 
     return (
         <main
@@ -107,7 +117,7 @@ export default function Main({ boardContainerRef, handleWheel, handleMouseDown, 
                     {squares.map((rowArr, r) =>
                         rowArr.map((sqState, c) => {
 
-                            
+
                             if (sqState === 0) return null;
 
                             const boxKey = `${r}-${c}`;
@@ -181,6 +191,7 @@ export default function Main({ boardContainerRef, handleWheel, handleMouseDown, 
                     rowArr.map((owner, vc) => (
                         <button
                             key={`v-${vr}-${vc}`}
+                            id={`v-${vr}-${vc}`}
                             data-node="true"
                             onClick={() => processMove(vr, vc)}
                             disabled={owner !== 0 || (gameMode === 'ai' && currentPlayer === 2)}

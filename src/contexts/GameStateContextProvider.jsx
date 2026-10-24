@@ -12,7 +12,8 @@ export const GameStateContextProvider = ({ children }) => {
         players: [],
         currentTurn: null,
         role: null,
-        roomCode: null
+        roomCode: null, 
+        myPlayer: null
     });
 
     return (

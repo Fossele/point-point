@@ -49,6 +49,7 @@ export default function GameRoomPage() {
             navigate(`/game`);
             console.log("moved due to the effect function :!nnn");
         }
+        
 
         socket.on("game-start", ({ currentTurn, players, roomCode }) => {
             if (!socket) return;
