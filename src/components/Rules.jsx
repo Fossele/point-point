@@ -1,8 +1,8 @@
 
+import { X, BookOpen } from "lucide-react"
 
 
-
-export default function Rules({setShowRules, X, BookOpen}) {
+export default function Rules({setShowRules}) {
 
 
   return (
