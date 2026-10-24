@@ -116,7 +116,7 @@ export function useGameState(audioEngine, onGameOver) {
              claimedCountTotal
          });*/
 
-        sendMove({r, c, player: currentPlayer });
+        sendMove({ roomCode: gameState.roomCode , r, c, player: currentPlayer });
 
         const nextVerts = vertices.map(row => [...row]);
         nextVerts[r][c] = currentPlayer;

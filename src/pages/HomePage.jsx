@@ -24,6 +24,7 @@ export default function HomePage() {
 
             socket.emit('create-room', (response) => {
                 if (response.roomCode) {
+                    
                     navigate(`/room/${response.roomCode}`);
 
                 }

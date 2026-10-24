@@ -13,7 +13,7 @@ export default function GameRoomPage() {
     const navigate = useNavigate();
     const { socket } = useSocket();
 
-    const { gameState } = useGameStateContext();
+    const { gameState, setGameState } = useGameStateContext();
 
 
     /*  useEffect(() => {
@@ -47,11 +47,31 @@ export default function GameRoomPage() {
     useEffect(() => {
         if (gameState.status === "playing") {
             navigate(`/game`);
-            console.log("moved due to the effect function :!");
+            console.log("moved due to the effect function :!nnn");
         }
 
-        socket.on("game-start", () => {
-            navigate(`/game`);
+        socket.on("game-start", ({ currentTurn, players, roomCode }) => {
+            if (!socket) return;
+
+            const myPlayer = players.find((p) => p.id === socket.id);
+            setGameState(prev => {
+
+                const nextState = {
+                    ...prev,
+                    status: 'playing',
+                    players,
+                    currentTurn,
+                    role: myPlayer ? myPlayer.role : 'spectator',
+                    roomCode: roomCode
+                }
+
+                console.log("Game state applied instantly, new state:", nextState, "game starts in a moment.");
+                navigate(`/game`);
+                return nextState;
+            })
+
+
+
         })
     }, [gameState, socket]);
 
@@ -63,7 +83,6 @@ export default function GameRoomPage() {
     );
 }
 
-672089135
 
 
 // Render View B: Active Game Board (Once game-start fires)

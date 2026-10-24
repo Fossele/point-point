@@ -22,9 +22,11 @@ export function useCommunication() {
 
 
     const receiveMove = useCallback(({ r, c, player, currentTurn, scores }) => {
+       // if (!socket) return;
+
         console.log("move received: ", { r, c, player, currentTurn, scores });
         setMoves((moves) => [...moves, { r, c, player, currentTurn, scores }]);
-    }, []);
+    }, [socket]);
 
     const receiveGameState = useCallback(({ currentTurn, players, roomCode }) => {
         //current turn should be the player who is about to make a move, not the one who just made a move
@@ -39,7 +41,7 @@ export function useCommunication() {
                 players,
                 currentTurn,
                 role: myPlayer ? myPlayer.role : 'spectator',
-                roomCode
+                roomCode : roomCode
             }
 
             console.log("Game state applied instantly, new state:", nextState, "game starts in a moment.");
@@ -77,14 +79,14 @@ export function useCommunication() {
     }, [socket]);
 
 
-    const sendMove = useCallback(({ r, c, player }) => {
+    const sendMove = useCallback(({ roomCode, r, c, player }) => {
         if (!socket) {
             console.warn("Socket is not connected yet. Cannot send message.");
             return;
         }
 
         console.log("move sent by player:", player);
-        socket.emit("make-move", { r, c, player });
+        socket.emit("make-move", { roomCode, r, c, player });
     }, [socket]);
 
 
