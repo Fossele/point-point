@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSocket } from '../contexts/socketIOContext.jsx';
 import { useCommunication } from '../hooks/useCommunication.js';
@@ -9,8 +9,55 @@ export default function HomePage() {
     const [inputCode, setInputCode] = useState('');
     const navigate = useNavigate();
     const { socket } = useSocket();
-    const { joinRoom } = useCommunication();
-    const { gameState } = useGameStateContext();
+    // const { joinRoom } = useCommunication();
+    const { gameState, setGameState } = useGameStateContext();
+
+    const joinRoom = useCallback((roomCode) => {
+        if (!socket) return;
+
+        console.log(`Attempting to join room: ${roomCode}`);
+
+        // Pass a callback function as the final argument to socket.emit
+        socket.emit('join-room', roomCode, (response) => {
+
+            if (response && response.success) {
+                console.log(response);
+
+                const { currentTurn, players, roomCode } = response.payload;
+
+
+
+                const myPlayer = players.find((p) => p.id === socket.id);
+                setGameState(prev => {
+
+                    const nextState = {
+                        ...prev,
+                        status: 'playing',
+                        players,
+                        currentTurn,
+                        role: myPlayer ? myPlayer.role : 'spectator',
+                        roomCode
+                    }
+
+
+
+                    console.log("Game state applied instantly, new state:", nextState);
+
+                    return nextState;
+                });
+
+                // Only navigate if the server confirmed the room exists
+                console.log(`Successfully joined room: ${response.payload.roomCode}`);
+
+            } else {
+
+                console.warn("Could not join room:", response?.error);
+
+                // If no error handler is provided, we can still log the error
+                console.error("Join room error:", response?.error);
+            }
+        });
+    }, [socket]);
 
 
     const handleCreateRoom = () => {
@@ -43,7 +90,7 @@ export default function HomePage() {
         if (roomCode) {
             joinRoom(inputCode);
         }
-        
+
     };
 
 
@@ -53,7 +100,7 @@ export default function HomePage() {
             console.log("moved due to the effect function :!");
         }
 
-        
+
     }, [gameState]);
 
     return (

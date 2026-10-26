@@ -19,7 +19,7 @@ export function useGameState(audioEngine, onGameOver) {
     const [claimedCountTotal, setClaimedCountTotal] = useState(0);
     const [history, setHistory] = useState([]);
     const [moveHistory, setMoveHistory] = useState([]);
-    
+
 
 
 
@@ -82,14 +82,14 @@ export function useGameState(audioEngine, onGameOver) {
     const processMove = useCallback((r, c) => {
         console.log(gameState);
 
-      if (gameState.currentTurn !==  gameState.role) {
+        if (gameState.currentTurn !== gameState.role) {
             //block unauthorized moves
             //audioEngine.play('block', currentPlayer === 1);
             console.log("Not your turn!");
             return;
         }
 
-        if (gameState.role == null){
+        if (gameState.role == null) {
             console.log("seems like you have no role.");
             return;
         }
@@ -123,7 +123,8 @@ export function useGameState(audioEngine, onGameOver) {
              claimedCountTotal
          });*/
 
-        sendMove({ roomCode: gameState.roomCode , r, c, player: currentPlayer });
+        sendMove({ roomCode: gameState.roomCode, r, c, player: currentPlayer });
+        
 
         const nextVerts = vertices.map(row => [...row]);
         nextVerts[r][c] = currentPlayer;
@@ -181,6 +182,58 @@ export function useGameState(audioEngine, onGameOver) {
     }, [vertices, squares, currentPlayer, scores, gameOver, extraTurn, claimedCountTotal, audioEngine, onGameOver]);
 
 
+    const processEveryMovesfromAdversary = useCallback((r, c, player) => {
+
+        if (gameOver || vertices[r][c] !== 0) return;
+
+        const nextVerts = vertices.map(row => [...row]);
+        nextVerts[r][c] = player;
+
+        const { updatedSquares, claimedCount, blockedCount } = evaluateAdjacentSquares(
+            r,
+            c,
+            nextVerts,
+            squares,
+            player
+        );
+
+        if (claimedCount > 0) {
+            audioEngine.play('claim', player === 1);
+        } else if (blockedCount > 0) {
+            audioEngine.play('block', player === 1);
+        } else {
+            audioEngine.play('tap', player === 1);
+        }
+
+        const newScores = {
+            ...scores,
+            [player]: scores[player + 1] + claimedCount
+        };
+
+        const newTotalFilled = claimedCountTotal + 1;
+
+        setVertices(nextVerts);
+        setSquares(updatedSquares);
+        setScores(newScores);
+        setClaimedCountTotal(newTotalFilled);
+
+        if (checkGameOver(newTotalFilled)) {
+            setGameOver(true);
+            setExtraTurn(false);
+            audioEngine.play('win');
+
+            let winner = 0;
+            if (newScores[1] > newScores[2]) winner = 1;
+            else if (newScores[2] > newScores[1]) winner = 2;
+
+            const info = { winner, finalP1: newScores[1], finalP2: newScores[2] };
+            setWinnerInfo(info);
+            if (onGameOver) onGameOver(info);
+            return;
+        }
+    });
+
+
     const handleUndo = () => {
         if (history.length === 0) return;
         const last = history[history.length - 1];
@@ -213,7 +266,8 @@ export function useGameState(audioEngine, onGameOver) {
         handleUndo,
         evaluateAdjacentSquares,
         captureOrderMap,
-        moves
+        moves,
+        processEveryMovesfromAdversary
     };
 }
 

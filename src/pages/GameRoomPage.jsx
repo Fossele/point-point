@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSocket } from '../contexts/socketIOContext.jsx';
 import RoomLobby from '../components/RoomLobby'; // The component with copy link & waiting status
 import Game from '../components/Game.jsx';
-import { useCommunication } from '../hooks/useCommunication.js';
 import { useEffect } from 'react';
 import { useGameStateContext } from '../contexts/GameStateContext.jsx';
 import { Socket } from 'socket.io-client';

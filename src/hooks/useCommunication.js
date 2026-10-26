@@ -21,10 +21,10 @@ export function useCommunication() {
     }, []);
 
 
-    const receiveMove = useCallback(({ r, c, player, currentTurn, scores }) => {
+    const receiveMove = useCallback(({ r, c, player, currentTurn, scores, lastMove }) => {
         // if (!socket) return;
 
-        console.log("move received: ", { r, c, player, currentTurn, scores });
+
         setMoves((moves) => [...moves, { r, c, player, currentTurn, scores }]);
         setGameState(prev => {
 
@@ -36,12 +36,13 @@ export function useCommunication() {
                 role: prev.role,
                 roomCode: prev.roomCode
             }
+            console.log("move received:", lastMove, "Time:", Date.now());
 
             console.log("Game state applied instantly, new state:", nextState, "state updated from the last move.");
 
             return nextState;
         });
-    }, [socket]);
+    }, []);
 
     const receiveGameState = useCallback(({ currentTurn, players, roomCode }) => {
         //current turn should be the player who is about to make a move, not the one who just made a move
@@ -177,7 +178,7 @@ export function useCommunication() {
             return;
         }
 
-        socket.on("state-update", receiveMessage);
+        //socket.on("state-update", receiveMessage);
 
         socket.on('move-applied', receiveMove);
 
@@ -191,11 +192,11 @@ export function useCommunication() {
          });*/
 
         return () => {
-            socket.off("state-update", receiveMessage);
+            //socket.off("state-update", receiveMessage);
             socket.off('move-applied', receiveMove);
             socket.off('game-start', receiveGameState);
         } // clean up function
-    }, [socket, receiveMessage, receiveMove, receiveGameState]);
+    }, [socket, receiveMove, receiveGameState]);
 
 
     return { socket, messages, sendMessage, gameState, joinRoom, createRoom, sendMove, moves };

@@ -7,22 +7,28 @@ import {
 } from 'lucide-react';
 
 import { CELL_SIZE, GRID_SIZE } from '../utils/constants.js';
-
-import React from "react";
 import { useState } from 'react';
-import { useCommunication } from '../hooks/useCommunication.js';
+import React from 'react';
+import { useGameStateContext } from '../contexts/GameStateContext.jsx';
 
 
-export default function Main({ boardContainerRef, handleWheel, handleMouseDown, handleMouseMove, handleMouseUp, boardPxSize, zoomLevel, panOffset, squares, vertices, processMove, adjustZoom, resetView, gameMode, currentPlayer, scores, captureOrderMap }) {
+export default function Main({ boardContainerRef, handleWheel, handleMouseDown, handleMouseMove, handleMouseUp, boardPxSize, zoomLevel, panOffset, squares, vertices, processMove, adjustZoom, resetView, gameMode, currentPlayer, scores, captureOrderMap, processEveryMovesfromAdversary, moves }) {
 
 
-    const { moves } = useCommunication();
+
+    const { gameState } = useGameStateContext();
 
     moves.forEach(capturedPoint => {
         let point = document.getElementById(`v-${capturedPoint.r}-${capturedPoint.c}`);
         point.className = `absolute rounded-full transform -translate-x-1/2 -translate-y-1/2 transition-all duration-150 focus:outline-none ${capturedPoint.player == 1 ? 'bg-cyan-400 border-2 border-white shadow-[0_0_12px_#00f0ff] scale-110 z-10'
-                : 'bg-pink-500 border-2 border-white shadow-[0_0_12px_#ff007f] scale-110 z-10'
+            : 'bg-pink-500 border-2 border-white shadow-[0_0_12px_#ff007f] scale-110 z-10'
             }`
+        if (capturedPoint.player !== gameState.role) {
+            processEveryMovesfromAdversary(capturedPoint.r, capturedPoint.c, capturedPoint.player);
+        }
+
+        console.log(capturedPoint)
+        //  processMove(capturedPoint.r, capturedPoint.c)
     });
 
 

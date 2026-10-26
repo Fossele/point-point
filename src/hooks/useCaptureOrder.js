@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
+
 export const useCaptureOrder = () => {
     // Track the global counter and the dictionary map in your state 
     const [scores, setScores] = useState({ 1: 0, 2: 0 });
-
+ 
     const [captureOrderMap, setCaptureOrderMap] = useState({});
 
 
@@ -16,11 +17,14 @@ export const useCaptureOrder = () => {
                 score: scores[currentPlayer]   // Stores 1, 2, 3...
             }
         }));
+
         setScores(prevScores => ({
             ...prevScores,
             [currentPlayer]: prevScores[currentPlayer] + 1
         }));
     
+
+        console.log(r, c , "point for box");
     };
 
     return { scores, setScores, captureOrderMap, handleBoxCaptured };

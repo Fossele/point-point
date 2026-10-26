@@ -52,7 +52,9 @@ export default function Game() {
         processMove,
         handleUndo,
         evaluateAdjacentSquares,
-        captureOrderMap
+        captureOrderMap,
+        processEveryMovesfromAdversary,
+        moves
     } = useGameState(audioEngine, () => {
         setTimeout(() => launchConfetti(confettiCanvasRef.current), 100);
     });
@@ -102,6 +104,8 @@ export default function Game() {
                 currentPlayer={currentPlayer}
                 scores={scores}
                 captureOrderMap={captureOrderMap}
+                processEveryMovesfromAdversary={processEveryMovesfromAdversary}
+                moves={moves}
             />
 
             <Footer handleUndo={handleUndo} history={history} gameMode={gameMode} currentPlayer={currentPlayer} initBoard={initBoard} />

@@ -71,7 +71,7 @@ export default function Header({ setGameMode, gameMode, initBoard, soundMuted, t
             {/* Score & Active Turn Bar */}
             <div className="w-full grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {/* P1 Score */}
-                <div className={`bg-slate-900/90 rounded-xl p-2 sm:p-2.5 border-2 transition-all flex items-center justify-between ${currentPlayer === 1 ? 'border-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.2)]' : 'border-slate-800 opacity-70'}`}>
+                <div className={`bg-slate-900/90 rounded-xl p-2 sm:p-2.5 border-2 transition-all flex items-center justify-between ${gameState.currentTurn === 1 ? 'border-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.2)]' : 'border-slate-800 opacity-70'}`}>
                     <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]"></span>
                         <div>
@@ -83,7 +83,7 @@ export default function Header({ setGameMode, gameMode, initBoard, soundMuted, t
                 </div>
 
                 {/* P2 Score */}
-                <div className={`bg-slate-900/90 rounded-xl p-2 sm:p-2.5 border-2 transition-all flex items-center justify-between ${currentPlayer === 2 ? 'border-pink-500 shadow-[0_0_15px_rgba(255,0,127,0.2)]' : 'border-slate-800 opacity-70'}`}>
+                <div className={`bg-slate-900/90 rounded-xl p-2 sm:p-2.5 border-2 transition-all flex items-center justify-between ${gameState.currentTurn === 2 ? 'border-pink-500 shadow-[0_0_15px_rgba(255,0,127,0.2)]' : 'border-slate-800 opacity-70'}`}>
                     <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-pink-500 shadow-[0_0_8px_#ff007f]"></span>
                         <div>
@@ -101,10 +101,10 @@ export default function Header({ setGameMode, gameMode, initBoard, soundMuted, t
 
                 {/* Active Turn Banner */}
                 <div className="col-span-2 sm:col-span-1 bg-slate-950/90 px-3 py-2 rounded-xl border border-slate-800 flex items-center justify-between">
-                    <div className={`font-mono text-xs font-bold flex items-center gap-1.5 ${currentPlayer === 1 ? 'text-cyan-400' : 'text-pink-500'}`}>
+                    <div className={`font-mono text-xs font-bold flex items-center gap-1.5 ${gameState.currentTurn === 1 ? 'text-cyan-400' : 'text-pink-500'}`}>
                         <Sparkles className="w-3.5 h-3.5 animate-spin" />
                         <span>
-                            {currentPlayer === 1 ? "P1 TURN" : (gameMode === 'ai' ? "AI THINKING" : "P2 TURN")}
+                            {gameState.currentTurn === 1 ? "P1 TURN" : (gameMode === 'ai' ? "AI THINKING" : "P2 TURN")}
                         </span>
                     </div>
 
