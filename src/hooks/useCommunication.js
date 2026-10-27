@@ -21,11 +21,11 @@ export function useCommunication() {
     }, []);
 
 
-    const receiveMove = useCallback(({ r, c, player, currentTurn, scores, lastMove }) => {
+    const receiveMove = useCallback(({ r, c, player, currentTurn, scores, lastMove, extraTurn }) => {
         // if (!socket) return;
 
 
-        setMoves((moves) => [...moves, { r, c, player, currentTurn, scores }]);
+        setMoves((moves) => [...moves, { r, c, player}]);
         setGameState(prev => {
 
             const nextState = {
@@ -34,7 +34,8 @@ export function useCommunication() {
                 players: prev.players,
                 currentTurn,
                 role: prev.role,
-                roomCode: prev.roomCode
+                roomCode: prev.roomCode,
+                extraTurn: extraTurn
             }
             console.log("move received:", lastMove, "Time:", Date.now());
 
@@ -199,7 +200,7 @@ export function useCommunication() {
     }, [socket, receiveMove, receiveGameState]);
 
 
-    return { socket, messages, sendMessage, gameState, joinRoom, createRoom, sendMove, moves };
+    return { socket, messages, sendMessage, gameState, joinRoom, createRoom, sendMove, moves, extraTurn: gameState.extraTurn }; // Return extraTurn from gameState
 
 }
 

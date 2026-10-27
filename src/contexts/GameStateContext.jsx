@@ -8,7 +8,8 @@ export const GameStateContext = createContext({
         currentTurn: null,
         role: null,
         roomCode: null,
-        myPlayer: null
+        myPlayer: null,
+        extraTurn: false
     },
     setGameState: () => { },
 });

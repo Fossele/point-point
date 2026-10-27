@@ -27,7 +27,7 @@ export default function Main({ boardContainerRef, handleWheel, handleMouseDown, 
             processEveryMovesfromAdversary(capturedPoint.r, capturedPoint.c, capturedPoint.player);
         }
 
-        console.log(capturedPoint)
+        //console.log(capturedPoint)
         //  processMove(capturedPoint.r, capturedPoint.c)
     });
 

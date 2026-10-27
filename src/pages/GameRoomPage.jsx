@@ -62,7 +62,8 @@ export default function GameRoomPage() {
                     players,
                     currentTurn,
                     role: myPlayer ? myPlayer.role : 'spectator',
-                    roomCode: roomCode
+                    roomCode: roomCode,
+                    extraTurn: prev.extraTurn // Preserve the extraTurn state
                 }
 
                 console.log("Game state applied instantly, new state:", nextState, "game starts in a moment.");

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSocket } from '../contexts/socketIOContext.jsx';
 import { useCommunication } from '../hooks/useCommunication.js';
 import { useGameStateContext } from '../contexts/GameStateContext.jsx';
+import e from 'cors';
 
 
 export default function HomePage() {
@@ -36,7 +37,8 @@ export default function HomePage() {
                         players,
                         currentTurn,
                         role: myPlayer ? myPlayer.role : 'spectator',
-                        roomCode
+                        roomCode,
+                        extraTurn: prev.extraTurn // Preserve the extraTurn state
                     }
 
 
