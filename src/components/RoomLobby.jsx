@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Copy, Check, Play } from 'lucide-react';
-import { useSocket } from '../contexts/socketIOContext.jsx';
+import { Copy, Check, Link2, Radio } from 'lucide-react';
 
 export default function RoomLobby({ roomCode, players }) {
     const [copied, setCopied] = useState(false);
@@ -15,46 +14,41 @@ export default function RoomLobby({ roomCode, players }) {
     };
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-slate-800 rounded-2xl shadow-xl text-white">
-            <h2 className="text-xl font-bold mb-4 text-center">Private Room Lobby</h2>
+        <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 text-white shadow-2xl shadow-slate-950/60">
+            <div className="mb-6 text-center">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">Private room</p>
+                <h2 className="mt-1 text-xl font-bold">Invite a challenger</h2>
+            </div>
 
             {/* Room Code Display */}
-            <div className="mb-6 p-4 bg-slate-900 rounded-xl text-center">
+            <div className="mb-6 rounded-xl border border-slate-800 bg-slate-950 p-5 text-center">
                 <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Room Code</p>
-                <span className="text-3xl font-mono font-bold tracking-widest text-emerald-400">{roomCode}</span>
+                <span className="font-mono text-3xl font-bold tracking-[0.3em] text-emerald-400">{roomCode}</span>
             </div>
 
             {/* Shareable Link Box */}
             <div className="mb-6">
-                <label className="text-xs text-slate-400 mb-1 block">Shareable Invite Link</label>
+                <label className="mb-1 flex items-center gap-1 text-xs text-slate-400"><Link2 className="h-3 w-3" /> Shareable invite link</label>
                 <div className="flex gap-2">
                     <input
                         type="text"
                         readOnly
                         value={shareableLink}
-                        className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-300 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-300 focus:outline-none"
                     />
                     <button
                         onClick={handleCopy}
-                        className="bg-indigo-600 hover:bg-indigo-500 px-4 rounded-lg flex items-center justify-center transition-colors"
+                        aria-label="Copy invite link"
+                        className="flex items-center justify-center rounded-lg bg-indigo-500 px-4 transition-colors hover:bg-indigo-400"
                     >
                         {copied ? <Check size={18} /> : <Copy size={18} />}
                     </button>
                 </div>
             </div>
 
-            {/* Start Game Button */}
-            {players.length === 2 && (
-                <div className="flex justify-center">
-                    <button className="bg-emerald-500 hover:bg-emerald-400 px-6 py-2 rounded-lg flex items-center gap-2 transition-colors">
-                        <Play size={18} />
-                        <span>Start Game</span>
-                    </button>
-                </div>
-            )}
-
             {/* Waiting Status */}
-            <div className="text-center text-slate-400 text-sm animate-pulse">
+            <div className="flex items-center justify-center gap-2 text-center text-sm text-slate-400">
+                <Radio className="radar-pulse h-4 w-4 rounded-full text-emerald-400" />
                 {players.length < 2 ? "Waiting for opponent to join..." : "Opponent connected! Starting game..."}
             </div>
         </div>

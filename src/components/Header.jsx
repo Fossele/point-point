@@ -16,7 +16,7 @@ export default function Header({ setGameMode, gameMode, initBoard, soundMuted, t
                     </div>
                     <div>
                         <div className="flex items-center gap-2">
-                            <h1 className="font-mono text-lg sm:text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500">
+                            <h1 className="font-mono text-lg font-black tracking-wider text-emerald-400 sm:text-xl">
                                 POINT POINT
                             </h1>
                             <span className="px-2 py-0.5 bg-cyan-950 text-cyan-400 border border-cyan-800/80 rounded-md font-mono text-[10px] font-bold">
@@ -75,11 +75,11 @@ export default function Header({ setGameMode, gameMode, initBoard, soundMuted, t
                     <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]"></span>
                         <div>
-                            <div className="font-mono text-xs font-bold text-cyan-400">PLAYER 1  {gameState.role ===1 && "You"}</div>
-                            <div className="text-[10px] text-slate-400 hidden sm:block">Cyan Neon</div>
+                            <div className="font-mono text-xs font-bold text-emerald-400">PLAYER 1 {gameState.role === 1 && 'YOU'}</div>
+                            <div className="hidden text-[10px] text-slate-400 sm:block">Neon Emerald</div>
                         </div>
                     </div>
-                    <div className="font-mono text-2xl font-black text-cyan-400">{scores[1]}</div>
+                    <div className="font-mono text-2xl font-black text-emerald-400">{scores[1]}</div>
                 </div>
 
                 {/* P2 Score */}
@@ -89,7 +89,7 @@ export default function Header({ setGameMode, gameMode, initBoard, soundMuted, t
                         <div>
                             <div className="font-mono text-xs font-bold text-pink-500">
                                 {gameMode === 'ai' ? 'CYBER AI' : 'PLAYER 2'}
-                                {gameState.role ===2 && "You"}
+                                {gameState.role === 2 && 'YOU'}
                             </div>
                             <div className="text-[10px] text-slate-400 hidden sm:block">
                                 {gameMode === 'ai' ? `Lvl: ${aiDifficulty.toUpperCase()}` : 'Pink Neon'}

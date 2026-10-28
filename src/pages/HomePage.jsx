@@ -1,9 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSocket } from '../contexts/socketIOContext.jsx';
-import { useCommunication } from '../hooks/useCommunication.js';
 import { useGameStateContext } from '../contexts/GameStateContext.jsx';
-import e from 'cors';
+import { Grid2X2, ArrowRight, Plus } from 'lucide-react';
 
 
 export default function HomePage() {
@@ -90,7 +89,7 @@ export default function HomePage() {
         console.log("trying to join");
         let roomCode = inputCode.trim().toUpperCase();
         if (roomCode) {
-            joinRoom(inputCode);
+            joinRoom(roomCode);
         }
 
     };
@@ -106,14 +105,21 @@ export default function HomePage() {
     }, [gameState]);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-4">
-            <h1 className="text-4xl font-black mb-8 text-emerald-400 tracking-wider">POINT POINT</h1>
+        <main className="flex min-h-screen flex-col items-center justify-center p-4">
+            <div className="mb-8 text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-400/30 bg-emerald-400/10 text-emerald-400 shadow-[0_0_30px_rgba(52,211,153,0.18)]">
+                    <Grid2X2 className="h-7 w-7" />
+                </div>
+                <h1 className="text-4xl font-black tracking-[0.2em] text-emerald-400 drop-shadow-[0_0_18px_rgba(52,211,153,0.45)]">POINT POINT</h1>
+                <p className="mt-2 text-sm font-medium text-slate-400">Fast, real-time Dots &amp; Boxes</p>
+            </div>
 
-            <div className="w-full max-w-sm bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col gap-4">
+            <div className="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl shadow-slate-950/60">
                 {/* Create Room Button (Player 1) */}
                 <button
                     onClick={handleCreateRoom}
-                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl transition-colors">
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 py-3 font-bold text-white transition hover:scale-[1.02] hover:bg-indigo-400 active:scale-[0.99]">
+                    <Plus className="h-4 w-4" />
                     Create Private Room
                 </button>
 
@@ -130,14 +136,17 @@ export default function HomePage() {
                         placeholder="Enter Room Code (e.g. XYZ-123)"
                         value={inputCode}
                         onChange={(e) => setInputCode(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-center uppercase tracking-widest text-slate-200 focus:outline-none focus:border-emerald-500" />
+                        maxLength={7}
+                        className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-center font-mono uppercase tracking-[0.25em] text-slate-200 placeholder:tracking-normal placeholder:text-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/50" />
                     <button
                         type="submit"
-                        className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 font-bold rounded-xl transition-colors">
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-800 py-3 font-bold text-slate-100 transition hover:bg-slate-700 active:scale-[0.99]">
                         Join Room
+                        <ArrowRight className="h-4 w-4 text-emerald-400" />
                     </button>
                 </form>
             </div>
-        </div>
+            </main>
+       
     );
 }

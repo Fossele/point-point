@@ -1,2 +1,36 @@
-/* src/index.css */
 @import "tailwindcss";
+
+:root {
+  font-family: Inter, Outfit, ui-sans-serif, system-ui, sans-serif;
+  color: #e2e8f0;
+  background: #020617;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(30, 41, 59, 0.55), transparent 42rem),
+    #020617;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes radar-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.3); }
+  50% { box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+}
+
+.radar-pulse {
+  animation: radar-pulse 1.8s ease-in-out infinite;
+}

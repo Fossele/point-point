@@ -2,12 +2,10 @@ import {
     ZoomIn,
     ZoomOut,
     Maximize2,
-    Compass,
-    X
+    Compass
 } from 'lucide-react';
 
 import { CELL_SIZE, GRID_SIZE } from '../utils/constants.js';
-import { useState } from 'react';
 import React from 'react';
 import { useGameStateContext } from '../contexts/GameStateContext.jsx';
 
@@ -87,8 +85,8 @@ export default function Main({ boardContainerRef, handleWheel, handleMouseDown, 
                                 <div
                                     key={`m-${r}-${c}`}
                                     className={
-                                        st === 1 ? 'bg-cyan-400' :
-                                            st === 2 ? 'bg-pink-500' :
+                                        st === 1 ? 'bg-emerald-400' :
+                                            st === 2 ? 'bg-rose-400' :
                                                 st === -1 ? 'bg-slate-700' : 'bg-transparent'
                                     }
                                 />
@@ -136,13 +134,13 @@ export default function Main({ boardContainerRef, handleWheel, handleMouseDown, 
                                         width={CELL_SIZE}
                                         height={CELL_SIZE}
                                         fill={
-                                            sqState === 1 ? 'rgba(6, 182, 212, 0.25)' :
-                                                sqState === 2 ? 'rgba(236, 72, 153, 0.25)' :
+                                            sqState === 1 ? 'rgba(52, 211, 153, 0.25)' :
+                                                sqState === 2 ? 'rgba(251, 113, 133, 0.25)' :
                                                     '#1e293b'
                                         }
                                         stroke={
-                                            sqState === 1 ? 'rgba(6, 182, 212, 0.6)' :
-                                                sqState === 2 ? 'rgba(236, 72, 153, 0.6)' :
+                                            sqState === 1 ? 'rgba(52, 211, 153, 0.6)' :
+                                                sqState === 2 ? 'rgba(251, 113, 133, 0.6)' :
                                                     '#334155'
                                         }
                                         strokeWidth="1"
@@ -204,8 +202,8 @@ export default function Main({ boardContainerRef, handleWheel, handleMouseDown, 
                             className={`absolute rounded-full transform -translate-x-1/2 -translate-y-1/2 transition-all duration-150 focus:outline-none ${owner === 0
                                 ? 'bg-slate-800 border border-slate-600 hover:scale-150 hover:bg-white hover:border-white hover:shadow-[0_0_12px_#ffffff] cursor-pointer'
                                 : owner === 1
-                                    ? 'bg-cyan-400 border-2 border-white shadow-[0_0_12px_#00f0ff] scale-110 z-10'
-                                    : 'bg-pink-500 border-2 border-white shadow-[0_0_12px_#ff007f] scale-110 z-10'
+                                        ? 'bg-emerald-400 border-2 border-white shadow-[0_0_12px_#34d399] scale-110 z-10'
+                                        : 'bg-rose-400 border-2 border-white shadow-[0_0_12px_#fb7185] scale-110 z-10'
                                 }`}
                             style={{
                                 left: `${vc * CELL_SIZE}px`,
