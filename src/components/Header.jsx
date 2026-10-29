@@ -75,11 +75,11 @@ export default function Header({ setGameMode, gameMode, initBoard, soundMuted, t
                     <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]"></span>
                         <div>
-                            <div className="font-mono text-xs font-bold text-emerald-400">PLAYER 1 {gameState.role === 1 && 'YOU'}</div>
+                            <div className="font-mono text-xs font-bold text-cyan-400">PLAYER 1 {gameState.role === 1 && 'YOU'}</div>
                             <div className="hidden text-[10px] text-slate-400 sm:block">Neon Emerald</div>
                         </div>
                     </div>
-                    <div className="font-mono text-2xl font-black text-emerald-400">{scores[1]}</div>
+                    <div className="font-mono text-2xl font-black text-cyan-400">{scores[1]}</div>
                 </div>
 
                 {/* P2 Score */}
