@@ -2,12 +2,15 @@ name: Point Point Frontend CI
 
 on:
   push:
-  branches:
-  - main
+    branches:
+      - main
   pull_request:
     branches:
-    - main
+      - main
 
 jobs:
-  
   lint-and-build:
+    runs-on: ubuntu-latest # Missing in your snippet
+    steps:
+      - uses: actions/checkout@v4
+      # Add your lint and build steps here
