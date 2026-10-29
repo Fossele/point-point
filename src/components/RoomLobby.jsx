@@ -13,6 +13,10 @@ export default function RoomLobby({ roomCode, players }) {
         setTimeout(() => setCopied(false), 2000);
     };
 
+    if(players == undefined){
+        console.log("no players");
+    }
+
     return (
         <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 text-white shadow-2xl shadow-slate-950/60">
             <div className="mb-6 text-center">

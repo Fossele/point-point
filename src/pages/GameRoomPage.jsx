@@ -78,6 +78,7 @@ export default function GameRoomPage() {
 
     return (
         <div className="flex items-center justify-center min-h-screen p-4">
+            <div className='bg-white p-3'></div>
             <RoomLobby roomCode={roomCode} players={gameState.players} />
         </div>
     );

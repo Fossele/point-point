@@ -39,7 +39,7 @@ export default function Game() {
 
     const {
         gameMode, setGameMode,
-        aiDifficulty, setAiDifficulty,
+        aiDifficulty,
         currentPlayer,
         scores,
         extraTurn,
@@ -59,6 +59,7 @@ export default function Game() {
         setTimeout(() => launchConfetti(confettiCanvasRef.current), 100);
     });
 
+    
     useAIPlayer({
         gameMode,
         currentPlayer,
@@ -69,7 +70,7 @@ export default function Game() {
         processMove,
         evaluateAdjacentSquares
     });
-
+   
     return (
 
         <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between items-center p-2 sm:p-4 font-sans select-none overflow-hidden relative">
