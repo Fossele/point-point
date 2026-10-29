@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import Rules from './Rules.jsx';
 import Main from './Main.jsx';
@@ -70,6 +70,12 @@ export default function Game() {
         processMove,
         evaluateAdjacentSquares
     });
+
+    useEffect(() => {
+        // Run initBoard only once when the game component mounts
+         initBoard();
+        console.log("Board initialized on Game component mount.");
+    }, []); // Empty dependency array ensures it runs strictly on launch
    
     return (
 
