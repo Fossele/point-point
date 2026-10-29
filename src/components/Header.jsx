@@ -3,7 +3,7 @@ import { useGameStateContext } from '../contexts/GameStateContext';
 
 
 
-export default function Header({ setGameMode, gameMode, initBoard, soundMuted, toggleSound, currentPlayer, scores, extraTurn, aiDifficulty , setShowRules}) {
+export default function Header({ setGameMode, gameMode, initBoard, soundMuted, toggleSound, scores, extraTurn, aiDifficulty , setShowRules}) {
 
     const {gameState} = useGameStateContext();
 
@@ -96,7 +96,7 @@ export default function Header({ setGameMode, gameMode, initBoard, soundMuted, t
                             </div>
                         </div>
                     </div>
-                    <div className="font-mono text-2xl font-black text-pink-500">{scores[2]}</div>
+                    <div className="font-mono text-2xl font-black text-pink-500">{isNaN(scores[2]) ? 0 : scores[2]}</div>
                 </div>
 
                 {/* Active Turn Banner */}

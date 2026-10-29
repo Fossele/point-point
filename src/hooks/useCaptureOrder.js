@@ -10,6 +10,8 @@ export const useCaptureOrder = () => {
 
     // Call this function whenever a box at (r, c) is completed:
     const handleBoxCaptured = (r, c, currentPlayer) => {
+        
+
         setCaptureOrderMap(prev => ({
             ...prev,
             [`${r}-${c}`]: {

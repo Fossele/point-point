@@ -29,7 +29,7 @@ export function useGameState(audioEngine, onGameOver) {
         const newSq = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
         setVertices(newVerts);
         setSquares(newSq);
-        setScores({ 1: 0, 2: 0 });
+       // setScores({ 1: 0, 2: 0 });
         // setCurrentPlayer(gameState.currentTurn);
        // setExtraTurn(false);
         setGameOver(false);
@@ -198,9 +198,11 @@ export function useGameState(audioEngine, onGameOver) {
             audioEngine.play('tap', player === 1);
         }
 
+        
+
         const newScores = {
             ...scores,
-            [player]: scores[player + 1] + claimedCount
+            [player]: scores[player] + claimedCount
         };
 
         const newTotalFilled = claimedCountTotal + 1;
